@@ -15,13 +15,16 @@ export class RaidRecord extends BaseEntity{
     @Column({ type: 'date', comment: '입장시간' })
     enterTime:Date;
 
-    @Column({ type: 'date', comment: '퇴장시간' })
+    @Column({ type: 'date', comment: '퇴장시간', nullable: true })
     endTime:Date
     
+    @Column({ nullable: true })
+    userId:number;
+
     @ManyToOne(
         () => User,
         (user) => user.raidRecordId,
       )
-    @JoinColumn({ name: 'user_id' })
-    userId: User;
+    @JoinColumn()
+    user: User;
 }

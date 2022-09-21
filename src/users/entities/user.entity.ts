@@ -10,9 +10,13 @@ export class User extends BaseEntity{
     @Column()
     name:string;
 
+    @Column({ nullable: true })
+    raidRecordId : number;
+    
     @OneToMany(
         ()=>RaidRecord,
-        (raidRecord)=>raidRecord.raidRecordId)
-    @JoinColumn({name:'raid_record_id'})
-    raidRecordId:RaidRecord[]
+        (raidRecord)=>raidRecord.userId
+        )
+    @JoinColumn()
+    raidRecord:RaidRecord[]
 }
