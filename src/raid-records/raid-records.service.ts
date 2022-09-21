@@ -93,5 +93,19 @@ export class RaidRecordsService {
     }
   }
 
+  async viewRank(userId: number) {
+    const topRankerInfoList = await this.raidRecordsReopsitory.find({
+      order:{
+        score:"DESC"
+      },
+      take: 10,
+    });
+    const myRankingInfo = await this.raidRecordsReopsitory.find({
+      where:{
+        userId:userId
+      }
+    })
 
+
+  }
 }

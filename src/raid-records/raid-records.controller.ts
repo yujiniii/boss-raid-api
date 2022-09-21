@@ -24,5 +24,8 @@ export class RaidRecordsController {
     return this.raidRecordsService.endRaid(bossRaidEndDto);
   }
 
-
+  @Get('/topRankerList')
+  remove(@Body('userId') userId: number) {
+    return this.raidRecordsService.viewRank(userId);
+  }
 }
