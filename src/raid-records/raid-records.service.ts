@@ -69,5 +69,29 @@ export class RaidRecordsService {
       
   }
 
+  async endRaid(bossRaidEndDto:BossRaidEndDto) {
+    const {userId, raidRecordId} = bossRaidEndDto
+    const value = await this.cacheManager.get('ttlTest');
+    if(isEntered === true){
+      if(typeof value === 'undefined'){
+        isEntered = false
+        return '게임 시간 초과로 저장되지 않았습니다.'
+      }
+      isEntered = false
+      await this.cacheManager.del('ttlTest');
+      await this.raidRecordsReopsitory
+      .createQueryBuilder()
+      .update(RaidRecord)
+      .set({ score: value.score, endTime: new Date()})
+      .where("raidRecordId = :raidRecordId", { raidRecordId: raidRecordId })
+      .execute()
+      const aa = await this.raidRecordsReopsitory.find()
+      console.log(aa)
+      return '게임이 종료되었습니다.'
+    } else {
+      return '종료할 게임이 존재하지 않습니다.'
+    }
+  }
+
 
 }

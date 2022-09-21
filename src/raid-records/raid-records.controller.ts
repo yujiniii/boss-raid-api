@@ -19,5 +19,10 @@ export class RaidRecordsController {
     return this.raidRecordsService.enterRaid(bossRaidStartDto);
   }
 
+  @Patch('/end')
+  endRaid(@Body() bossRaidEndDto:BossRaidEndDto) {
+    return this.raidRecordsService.endRaid(bossRaidEndDto);
+  }
+
 
 }
