@@ -28,6 +28,15 @@ export class UsersService {
   }
 
 
+  async findOne(id: number) {
+    const records = await this.raidRecordsReopsitory.find({
+      where:{
+        userId:id
+      }
+    })
+    return records;
+  }
+
 }
 
 
