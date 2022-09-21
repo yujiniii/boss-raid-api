@@ -36,4 +36,38 @@ export class RaidRecordsService {
     
   }
 
+  async enterRaid(bossRaidStartDto:BossRaidStartDto) {
+    // 보스레이드 입장
+    const {userId, level} = bossRaidStartDto
+    if(isEntered == true){
+      return `isEntered = true
+      userId = ${userId}`;
+    } else {
+      isEntered = true;
+      const meta = await this.httpService
+      .get(`https://dmpilf5svl7rv.cloudfront.net/assignment/backend/bossRaidData.json`)
+      .toPromise();
+
+      const jsonTest = JSON.parse(JSON.stringify(meta.data)).bossRaids
+      const [bossRaids] = jsonTest
+      const {bossRaidLimitSeconds,levels} = bossRaids;
+      levels[level]['userId'] = userId
+      const newGame = await this.raidRecordsReopsitory.create({
+        userId,
+        level:level,
+        score:0,
+        enterTime:new Date(),
+        endTime:null
+      });
+      console.log(newGame)
+      this.raidRecordsReopsitory.save(newGame)
+      await this.cacheManager.set('ttlTest',levels[level], {ttl:bossRaidLimitSeconds});
+ 
+      return `userId = ${userId}
+        level = ${level} `;
+    }
+      
+  }
+
+
 }

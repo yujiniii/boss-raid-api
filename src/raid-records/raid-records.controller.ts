@@ -14,5 +14,10 @@ export class RaidRecordsController {
     return this.raidRecordsService.Checkstatus();
   }
 
+  @Post('/enter')
+  enterRaid(@Body() bossRaidStartDto: BossRaidStartDto) {
+    return this.raidRecordsService.enterRaid(bossRaidStartDto);
+  }
+
 
 }
