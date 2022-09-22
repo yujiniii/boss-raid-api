@@ -94,18 +94,46 @@ export class RaidRecordsService {
   }
 
   async viewRank(userId: number) {
-    const topRankerInfoList = await this.raidRecordsReopsitory.find({
-      order:{
-        score:"DESC"
-      },
-      take: 10,
-    });
-    const myRankingInfo = await this.raidRecordsReopsitory.find({
-      where:{
-        userId:userId
-      }
+    
+    const sortuser = await this.sortUserScore(userId)
+    const myRank = await this.findMyRank(sortuser, userId)
+    let rankObject = {}
+    sortuser.forEach((val,idx)=>{
+      rankObject[idx] = { userId: val[0], totalScore:val[1] };
     })
+    console.log(rankObject)
+    let looksGoodRank = JSON.stringify(rankObject)
+    return `your RANK : ${myRank}
+    ${looksGoodRank}`
+  }
+  async sortUserScore(userId:number){
+    let userArr = []
+    const allUser = await this.usersReopsitory.find();
+    
+    for(let i:number=0; i<allUser.length;i++){
+      let nowUserId = allUser[i].userId
+      let {totalScore} = await this.raidRecordsReopsitory
+        .createQueryBuilder()
+        .select('SUM(RaidRecord.score)', 'totalScore')
+        .where("userId = :userId", { userId: nowUserId })
+        .getRawOne(); 
 
+        userArr.push([nowUserId,totalScore])
+    }
+    let sortuser = userArr.sort(function(a,b){
+      return b[1]-a[1];
+    })
+    return sortuser;
+  }
 
+  findMyRank(sortuser:any[], userId:number){
+    let findRank:number = 0
+    sortuser.find(function(element, index){
+      if(element[0] === userId){
+        findRank = index
+        return true;
+      }
+    });
+    return findRank
   }
 }
