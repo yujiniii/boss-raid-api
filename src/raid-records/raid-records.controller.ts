@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, ParseIntPipe, ValidationPipe, UsePipes } from '@nestjs/common';
 import { RaidRecordsService } from './raid-records.service';
 import { BossRaidEndDto } from './dto/boss-raid-end.dto';
 import { BossRaidStartDto } from './dto/boss-raid-start.dto';
@@ -15,17 +15,19 @@ export class RaidRecordsController {
   }
 
   @Post('/enter')
+  @UsePipes(ValidationPipe)
   enterRaid(@Body() bossRaidStartDto: BossRaidStartDto) {
     return this.raidRecordsService.enterRaid(bossRaidStartDto);
   }
 
   @Patch('/end')
+  @UsePipes(ValidationPipe)
   endRaid(@Body() bossRaidEndDto:BossRaidEndDto) {
     return this.raidRecordsService.endRaid(bossRaidEndDto);
   }
 
   @Get('/topRankerList')
-  remove(@Body('userId') userId: number) {
+  viewRank(@Body('userId', ValidationPipe, ParseIntPipe) userId: number) {
     return this.raidRecordsService.viewRank(userId);
   }
 }
