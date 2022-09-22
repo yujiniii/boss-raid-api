@@ -10,8 +10,8 @@ export class User extends BaseEntity{
     @Column()
     name:string;
 
-    @Column({ nullable: true })
-    raidRecordId : number;
+    // @Column({ nullable: true })
+    // raidRecordId : number;
     
     @OneToMany(
         ()=>RaidRecord,

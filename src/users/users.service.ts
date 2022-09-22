@@ -28,14 +28,24 @@ export class UsersService {
   }
 
 
-  async findOne(id: number) {
-    const records = await this.raidRecordsReopsitory.find({
+  async findUser(id: number) {
+    const record= await this.raidRecordsReopsitory.find({
       where:{
         userId:id
       }
-    })
-    return records;
+    });
+    let records = JSON.stringify(record)
+    console.log(records)
+    const {totalScore} = await this.raidRecordsReopsitory
+      .createQueryBuilder()
+      .select('SUM(RaidRecord.score)', 'totalScore')
+      .where("userId = :userId", { userId: id })
+      .getRawOne(); 
+    console.log(totalScore)
+    return `totalScore = ${totalScore}
+    ${records}`;
   }
+
 
 }
 
